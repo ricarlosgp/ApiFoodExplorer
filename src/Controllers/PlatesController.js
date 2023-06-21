@@ -5,15 +5,18 @@ const DiskStorage = require("../providers/DiskStorageForPlate");
 
 class PlatesController{
     async create(request, response){
-        const data = request.body;
+        const {title, description, category, price, user_id,
+            ingredients} = request.body;
 
-        const {title, description, category, ingredients, price} = JSON.parse(data);
+            console.log(user_id)
 
-        const user_id = request.user.id;
-        const imagem = request.file.filename;
+        // const {title, description, category, ingredients, price} = JSON.parse(data);
+
+        // const user_id = request.user.id;
+        // const imagem = request.file.filename;
         
-        const diskStorage = new DiskStorage();
-        const filename = await diskStorage.saveFile(imagem);
+        // const diskStorage = new DiskStorage();
+        // const filename = await diskStorage.saveFile(imagem);
         
         const [plate_id] = await knex("plates").insert({
             title,
@@ -96,23 +99,23 @@ class PlatesController{
         const database = await sqliteConnection();
         const plate = await database.get("SELECT * FROM plates WHERE id = (?)", [plate_id]);
         
-        const [saveId] = await knex('favorites')
-        .where({id: plate_id});
+        // const [saveId] = await knex('favorites')
+        // .where({id: plate_id});
 
-        if(saveId){
-            await knex('favorites')
-            .where({id: plate_id}).delete();
+        // if(saveId){
+        //     // await knex('favorites')
+        //     // .where({id: plate_id}).delete();
             
-            await knex('favorites')
-            .insert({
-                id: plate_id,
-                title,
-                category,
-                description,
-                price,
-                user_id: saveId.user_id
-            });
-        };
+        //     await knex('favorites')
+        //     .insert({
+        //         id: plate_id,
+        //         title,
+        //         category,
+        //         description,
+        //         price,
+        //         user_id: saveId.user_id
+        //     });
+        // };
 
         if(!plate) {
             throw new AppError("Prato não encontrado");

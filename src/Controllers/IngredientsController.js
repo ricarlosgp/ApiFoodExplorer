@@ -1,15 +1,15 @@
 const knex = require("../database/knex");
 
 class IngredientsController {
-    async index(request, response){
-        const { name } = request.query;
+    // async index(request, response){
+    //     const { name } = request.query;
 
-        const ingredients = await knex("ingredients")
-        .select("plate_id")
-        .whereLike("name", `%${name}%`);
+    //     const ingredients = await knex("ingredients")
+    //     .select("plate_id")
+    //     .whereLike("name", `%${name}%`);
 
-        return response.json(ingredients);
-    }
+    //     return response.json(ingredients);
+    // }
 
     async show(request, response){
         const plate_id = request.params;
