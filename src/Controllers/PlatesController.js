@@ -5,29 +5,26 @@ const DiskStorage = require("../providers/DiskStorageForPlate");
 
 class PlatesController{
     async create(request, response){
-        const {title, description, category, price, user_id,
-            ingredients} = request.body;
-
-            console.log(user_id)
-
-        // const {title, description, category, ingredients, price} = JSON.parse(data);
-
-        // const user_id = request.user.id;
-        // const imagem = request.file.filename;
+        const data = request.body.data;
         
-        // const diskStorage = new DiskStorage();
-        // const filename = await diskStorage.saveFile(imagem);
+        const {title, description, category, ingredients, price} = JSON.parse(data);
+        
+        const user_id = request.user.id;
+        const imagem = request.file.filename;
+        
+        const diskStorage = new DiskStorage();
+        const filename = await diskStorage.saveFile(imagem);
         
         const [plate_id] = await knex("plates").insert({
             title,
-            imagem: 'teste',
+            imagem: filename,
             description,
             category,
             price,
             user_id,
             ingredients
         });
-      
+
         const ingredientsInsert = ingredients.map(name => {
             return{
                 plate_id,
@@ -46,7 +43,7 @@ class PlatesController{
 
         const plate = await knex("plates").where({id}).orderBy("title");
         const ingredients = await knex("ingredients").where({plate_id: id}).orderBy("name");
-    
+
         return response.json([
             ...plate,
             ingredients
@@ -70,7 +67,7 @@ class PlatesController{
     }
 
     async index(request, response){
-        const { title} = request.query;
+        const { title } = request.query;
        
         let plates;
         
