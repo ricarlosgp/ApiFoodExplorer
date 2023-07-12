@@ -92,6 +92,12 @@ class PlatesController{
     async update(request, response){
         const plate_id = request.params.id;
         const {title, description, category, price, ingredients} = request.body;
+
+        console.log(title,
+            category,
+            price,
+            description,
+            ingredients)
         
         const database = await sqliteConnection();
         const plate = await database.get("SELECT * FROM plates WHERE id = (?)", [plate_id]);

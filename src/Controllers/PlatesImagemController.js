@@ -23,7 +23,7 @@ class PlatesImagemController {
         plate.imagem = filename;
         
         await knex("plates").update({imagem: plate.imagem}).where({id: plate_id.id});
-        await knex("favorites").update({imagem: plate.imagem}).where({id: plate_id.id});
+        // await knex("favorites").update({imagem: plate.imagem}).where({id: plate_id.id});
         
         return response.json(plate);
     }
