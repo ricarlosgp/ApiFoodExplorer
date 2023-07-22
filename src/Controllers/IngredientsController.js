@@ -27,9 +27,9 @@ class IngredientsController {
 
         await knex('ingredients').where({plate_id}).delete();
        
-        const insertIngredients = ingredients.map(name => {
+        const insertIngredients = ingredients.map(item => {
             return {
-                name,
+                name: item.name,
                 plate_id,
                 user_id
             }

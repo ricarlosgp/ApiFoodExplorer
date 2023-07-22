@@ -92,34 +92,9 @@ class PlatesController{
     async update(request, response){
         const plate_id = request.params.id;
         const {title, description, category, price, ingredients} = request.body;
-
-        console.log(title,
-            category,
-            price,
-            description,
-            ingredients)
-        
         const database = await sqliteConnection();
         const plate = await database.get("SELECT * FROM plates WHERE id = (?)", [plate_id]);
         
-        // const [saveId] = await knex('favorites')
-        // .where({id: plate_id});
-
-        // if(saveId){
-        //     // await knex('favorites')
-        //     // .where({id: plate_id}).delete();
-            
-        //     await knex('favorites')
-        //     .insert({
-        //         id: plate_id,
-        //         title,
-        //         category,
-        //         description,
-        //         price,
-        //         user_id: saveId.user_id
-        //     });
-        // };
-
         if(!plate) {
             throw new AppError("Prato não encontrado");
         };
