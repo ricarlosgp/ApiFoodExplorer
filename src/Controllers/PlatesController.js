@@ -14,7 +14,7 @@ class PlatesController{
         
         const diskStorage = new DiskStorage();
         const filename = await diskStorage.saveFile(imagem);
-        
+
         const [plate_id] = await knex("plates").insert({
             title,
             imagem: filename,
@@ -22,7 +22,8 @@ class PlatesController{
             category,
             price,
             user_id,
-            ingredients
+            ingredients: JSON.stringify(ingredients),
+            user_id: 1
         });
 
         const ingredientsInsert = ingredients.map(name => {
@@ -61,7 +62,6 @@ class PlatesController{
             await diskStorage.deleteFile(plate.imagem);
         }
         await knex("plates").where({id}).delete();
-        // await knex("favorites").where({id}).delete();
 
         return response.json();
     }
@@ -83,7 +83,7 @@ class PlatesController{
                 .whereLike("plates.ingredients", `%${title}%`);
 
             }else{
-                plates = await knex('plates').orderBy('favorited');
+                plates = await knex('plates').orderBy('title');
             }
 
         return response.json(plates.reverse());
@@ -92,6 +92,7 @@ class PlatesController{
     async update(request, response){
         const plate_id = request.params.id;
         const {title, description, category, price, ingredients} = request.body;
+
         const database = await sqliteConnection();
         const plate = await database.get("SELECT * FROM plates WHERE id = (?)", [plate_id]);
         
@@ -118,7 +119,7 @@ class PlatesController{
                 plate.description, 
                 plate.category,
                 plate.price, 
-                plate.ingredients, 
+                JSON.stringify(plate.ingredients), 
                 plate_id
             ]
         );

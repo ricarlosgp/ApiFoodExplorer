@@ -8,7 +8,7 @@ class UserController {
       try {
         const {name, email, password} = request.body;
         
-        console.log(email, password, name)
+        // console.log(email, password, name)
         
         // const checkuserExists = await knex.select('email').where({email}).from('users')
 

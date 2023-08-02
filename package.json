@@ -4,7 +4,7 @@
   "description": "Api for project front food explorer",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/server.js",
+    "dev": "nodemon watch ./src/server.js",
     "start": "pm2-runtime start ecosystem.config.js --env production",
     "migrate": "knex migrate:latest"
   },
