@@ -8,13 +8,11 @@ class UserController {
       try {
         const {name, email, password} = request.body;
         
-        // console.log(email, password, name)
-        
-        // const checkuserExists = await knex.select('email').where({email}).from('users')
+        const checkuserExists = await knex.select('email').where({email}).from('users')
 
-        // if (checkuserExists.length > 0){
-        //   throw new AppError('Este email já está em uso', 401);
-        // };
+        if (checkuserExists.length > 0){
+          throw new AppError('Este email já está em uso', 401);
+        };
     
         const hashedPassword = await hash(password, 8);
     
