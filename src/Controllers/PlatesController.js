@@ -86,7 +86,7 @@ class PlatesController{
                 plates = await knex('plates').orderBy('title');
             }
 
-            console.log(plates)
+            // console.log(plates)
 
         return response.json(plates.reverse());
     }
