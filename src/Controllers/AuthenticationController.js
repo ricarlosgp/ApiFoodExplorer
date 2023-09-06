@@ -8,26 +8,30 @@ const {sign} = require("jsonwebtoken");
 class AuthenticationController {
     async create(request, response){
         const {email, password} = request.body;
+        
+        try {
+            const user = await knex("users").where({email}).first();
+            
+            if(!user){
+                throw new AppError("E-mail e/ou senha incorreta", 401);
+            }
+    
+            const passwordMatched = await compare(password, user.password);
+    
+            if(!passwordMatched){
+                throw new AppError("E-mail e/ou senha incorreta", 401);
+            }
+            const {secret} = authConfig.jwt;
+            const token = sign({}, secret, {
+                subject: String(user.id),
+                expiresIn: '24h'
+            })
 
-        const user = await knex("users").where({email}).first();
-
-        if(!user){
-            throw new AppError("E-mail e/ou senha incorreta", 401);
+            return response.json({user, token});
+        }catch(error) {
+            return response.status(401).json({ error: "Invalid email or password." });
         }
 
-        const passwordMatched = await compare(password, user.password);
-
-        if(!passwordMatched){
-            throw new AppError("E-mail e/ou senha incorreta", 401);
-        }
-
-        const {secret} = authConfig.jwt;
-        const token = sign({}, secret, {
-            subject: String(user.id),
-            expiresIn: '24h'
-        })
-
-        return response.json({user, token});
     }
 }
 
