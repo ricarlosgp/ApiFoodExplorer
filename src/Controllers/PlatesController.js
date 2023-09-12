@@ -15,26 +15,30 @@ class PlatesController{
         const diskStorage = new DiskStorage();
         const filename = await diskStorage.saveFile(imagem);
 
-        const [plate_id] = await knex("plates").insert({
-            title,
-            imagem: filename,
-            description,
-            category,
-            price,
-            user_id,
-            ingredients: JSON.stringify(ingredients),
-            user_id: 1
-        });
-
-        const ingredientsInsert = ingredients.map(name => {
-            return{
-                plate_id,
-                name,
-                user_id
-            }
-        });
-        
-        await knex("ingredients").insert(ingredientsInsert);
+        try {
+            const [plate_id] = await knex("plates").insert({
+                title,
+                imagem: filename,
+                description,
+                category,
+                price,
+                user_id,
+                ingredients: JSON.stringify(ingredients),
+                user_id: 1
+            });
+    
+            const ingredientsInsert = ingredients.map(name => {
+                return{
+                    plate_id,
+                    name,
+                    user_id
+                }
+            });
+            
+            await knex("ingredients").insert(ingredientsInsert);
+        } catch (error) {
+            return response.status(401).json({ error: "Error ao cadastrar prato." });
+        }
 
         return response.json().status(200);
     }
